@@ -5,13 +5,29 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 
-app = Flask(__name__)
 
+app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+app.config['JSON_SORT_KEYS'] = False
 engine = create_engine('sqlite:///./database.db')
 db = SQLAlchemy(app)
+
+
+def find_users_in_database(user_list):
+    if type(user_list) is str:
+        user_integer = int(user_list)
+        result = db.session.query(User).get(user_integer)
+        if result is None:
+            return False
+    else:
+        for user in user_list:
+            user_integer = int(user)
+            result = db.session.query(User).get(user_integer)
+            if result is None:
+                return False
+    return True
+
 
 association_table = db.Table('Users_chats',
                              db.Column('user_id', db.Integer, db.ForeignKey('Users.id')),

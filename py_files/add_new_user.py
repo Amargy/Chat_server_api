@@ -3,7 +3,7 @@ import flask
 from flask import jsonify
 from jsonschema import validate, ValidationError
 from sqlalchemy import func
-from data_base_settings import User, db, app, find_users_in_database
+from data_base_settings import User, db, app, find_user_by_username
 from validation_schemas import validate_schema_for_new_user_request
 
 
@@ -20,16 +20,14 @@ def add_new_user_in_database(incoming_json):
 def post_query_add_new_user():
     incoming_json = flask.request.get_json()
     if incoming_json is None:
-        return jsonify(success=False)
-        # return response(400, {})
+        return jsonify("Incoming data is empty")
     try:
         validate(instance=incoming_json, schema=validate_schema_for_new_user_request)
     except ValidationError:
-        return jsonify(success=False)
-        # return response (405, {})
-    else:
-        if find_users_in_database(incoming_json['username']) is False:
-            add_new_user_in_database(incoming_json)
-        else:
-            return jsonify("User with the same name already exists")
-        return jsonify(success=True)
+        return jsonify("Incoming data is not valid")
+
+    if find_user_by_username(incoming_json['username']) is True:
+        return jsonify("User with the same name already exists")
+
+    add_new_user_in_database(incoming_json)
+    return jsonify(success=True)

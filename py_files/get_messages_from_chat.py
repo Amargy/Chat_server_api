@@ -2,7 +2,7 @@
 import flask
 from flask import jsonify
 from jsonschema import validate, ValidationError
-from data_base_settings import db, Message, find_users_in_database, app
+from data_base_settings import db, Message, app, find_chat_by_id
 from validation_schemas import validate_schema_for_get_message_list
 
 
@@ -27,16 +27,14 @@ def form_message_list_from_data_base(incoming_json):
 def get_messages_from_chat():
     incoming_json = flask.request.get_json()
     if incoming_json is None:
-        return jsonify(success=False)
-        # return response(400, {})
+        return jsonify("Incoming data is empty")
     try:
         validate(instance=incoming_json, schema=validate_schema_for_get_message_list)
     except ValidationError:
-        return jsonify(success=False)
-        # return response (405, {})
-    else:
-        if find_users_in_database(incoming_json['chat']) is True:
-            message_list = form_message_list_from_data_base(incoming_json)
-        else:
-            return False
-        return jsonify(message_list)
+        return jsonify("Incoming data is not valid")
+
+    if find_chat_by_id(incoming_json['chat']) is False:
+        return jsonify("Chat with this name does not exist")
+
+    message_list = form_message_list_from_data_base(incoming_json)
+    return jsonify(message_list)

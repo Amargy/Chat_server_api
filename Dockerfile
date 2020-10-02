@@ -3,7 +3,7 @@ FROM python:3.7-alpine
 COPY . /app
 WORKDIR /app
 RUN pip --no-cache-dir install -r /app/requirements.txt
-CMD ["python", "start_server.py"]
+CMD ["python", "start_api.py"]
 
 
 # RUN apk add --no-cache python3-dev \

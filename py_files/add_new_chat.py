@@ -9,6 +9,8 @@ from validation_schemas import validate_schema_for_new_chat_request
 
 def add_new_chat_in_database(incoming_json):
     max_id_from_database = db.session.query(func.max(Chat.id)).first()[0]
+    if max_id_from_database is None:
+        max_id_from_database = 0
     new_chat = Chat(id=max_id_from_database + 1, name=incoming_json['name'])
     for user in incoming_json['users']:
         user_integer = int(user)

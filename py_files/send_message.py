@@ -3,12 +3,14 @@ import flask
 from flask import jsonify
 from jsonschema import validate, ValidationError
 from sqlalchemy import func
-from app.data_base_settings import db, User, Message, find_users_in_database, app
-from app.validation_schemas import validate_schema_for_new_message
+from data_base_settings import db, User, Message, find_users_in_database, app
+from validation_schemas import validate_schema_for_new_message
 
 
 def add_new_message_in_database(incoming_json):
-    max_id_from_database = db.session.query(func.max(User.id)).first()[0]
+    max_id_from_database = db.session.query(func.max(Message.id)).first()[0]
+    if max_id_from_database is None:
+        max_id_from_database = 0
     chat_id_int = int(incoming_json['chat'])
     author_id_int = int(incoming_json['author'])
     new_message = Message(id=max_id_from_database + 1, chat=chat_id_int, author=author_id_int,

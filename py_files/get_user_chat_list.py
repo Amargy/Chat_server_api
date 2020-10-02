@@ -5,7 +5,7 @@ from flask import jsonify
 from jsonschema import validate, ValidationError
 from sqlalchemy import select, desc
 from data_base_settings import db, Message, Chat, find_users_in_database, app
-from start_server import association_table, engine
+from start_api import association_table, engine
 from validation_schemas import validate_schema_for_new_message
 
 
@@ -83,7 +83,7 @@ def form_chat_list_from_database(incoming_json):
     return chats_list
 
 
-@app.route('/chats/get', methods=['GET'])
+@app.route('/chats/get', methods=['POST'])
 def get_user_chats_list():
     incoming_json = flask.request.get_json()
     if incoming_json is None:

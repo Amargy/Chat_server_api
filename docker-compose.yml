@@ -7,3 +7,6 @@ services:
       - ./py_files:/app
     ports:
       - "9000:9000"
+#    stdin_open: true # docker run -i
+#    tty: true        # docker run -t
+#    command: /bin/bash

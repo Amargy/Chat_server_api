@@ -4,7 +4,7 @@ services:
   web:
     build: .
     volumes:
-      - ./py_files:/app
+      - ./api_py_files:/app
     ports:
       - "9000:9000"
 #    stdin_open: true # docker run -i

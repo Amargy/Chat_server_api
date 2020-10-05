@@ -26,15 +26,15 @@ def form_message_list_from_data_base(incoming_json):
 @app.route('/messages/get', methods=['POST'])
 def get_messages_from_chat():
     incoming_json = flask.request.get_json()
-    if incoming_json is None:
-        return jsonify("Incoming data is empty"), 204
+    if not incoming_json:
+        return jsonify({'error': 'Incoming data is empty'}), 422
     try:
         validate(instance=incoming_json, schema=validate_schema_for_get_message_list)
     except ValidationError:
-        return jsonify("Incoming data is not valid"), 204
+        return jsonify({'error': 'Incoming data is not valid'}), 400
 
-    if find_chat_by_id(incoming_json['chat']) is False:
-        return jsonify("Chat with this name does not exist"), 204
+    if not find_chat_by_id(incoming_json['chat']):
+        return jsonify({'error': 'Chat with this name does not exist'}), 406
 
     message_list = form_message_list_from_data_base(incoming_json)
     return jsonify(message_list), 200

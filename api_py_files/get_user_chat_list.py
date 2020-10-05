@@ -4,7 +4,8 @@ import flask
 from flask import jsonify
 from jsonschema import validate, ValidationError
 from sqlalchemy import select, desc
-from data_base_settings import db, Message, Chat, app, find_user_by_username, association_table, engine
+from data_base_settings import db, Message, Chat, app, association_table, engine, \
+    find_users_by_id
 from validation_schemas import validate_schema_for_new_message
 
 
@@ -25,10 +26,7 @@ def get_chats_id_for_user_from_database(incoming_json):
     sql_query = select([association_table.c.chat_id]).where(association_table.c.user_id == json_user_id)
     connection = engine.connect()
     result = connection.execute(sql_query)
-
-    chats_id = []
-    for row in result:
-        chats_id.append(row.items()[0][1])
+    chats_id = [row.items()[0][1] for row in result]
 
     return chats_id
 
@@ -37,9 +35,7 @@ def get_users_from_database(chat_id):
     sql_query = select([association_table.c.user_id]).where(association_table.c.chat_id == chat_id)
     connection = engine.connect()
     result = connection.execute(sql_query)
-    users_id = []
-    for row in result:
-        users_id.append(row.items()[0][1])
+    users_id = [row.items()[0][1] for row in result]
     return users_id
 
 
@@ -85,15 +81,15 @@ def form_chat_list_from_database(incoming_json):
 @app.route('/chats/get', methods=['POST'])
 def get_user_chats_list():
     incoming_json = flask.request.get_json()
-    if incoming_json is None:
-        return jsonify("Incoming data is empty"), 204
+    if not incoming_json:
+        return jsonify({'error': 'Incoming data is empty'}), 422
     try:
         validate(instance=incoming_json, schema=validate_schema_for_new_message)
     except ValidationError:
-        return jsonify("Incoming data is not valid"), 204
+        return jsonify({'error': 'Incoming data is not valid'}), 400
 
-    if find_user_by_username(incoming_json['user']) is False:
-        return jsonify("User with this name does not exist"), 204
+    if not find_users_by_id(incoming_json['user']):
+        return jsonify({'error': 'User with this name does not exist'}), 406
 
     chat_list = form_chat_list_from_database(incoming_json)
     return jsonify(chat_list), 200

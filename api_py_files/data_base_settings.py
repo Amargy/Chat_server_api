@@ -22,7 +22,7 @@ def find_or_create_database():
 
 def find_chat_by_name(chat_name):
     result = db.session.query(Chat).filter(Chat.name == chat_name).first()
-    if result is None:
+    if not result:
         return False
     else:
         return True
@@ -30,7 +30,7 @@ def find_chat_by_name(chat_name):
 
 def find_chat_by_id(chat_id):
     result = db.session.query(Chat).filter(Chat.id == chat_id).first()
-    if result is None:
+    if not result:
         return False
     else:
         return True
@@ -38,7 +38,7 @@ def find_chat_by_id(chat_id):
 
 def find_user_by_username(user_list):
     result = db.session.query(User).filter(User.username == user_list).first()
-    if result is None:
+    if not result:
         return False
     else:
         return True
@@ -48,12 +48,12 @@ def find_users_by_id(user_list):
     if type(user_list) is str:
         user_integer = int(user_list)
         result = db.session.query(User).get(user_integer)
-        if result is None:
+        if not result:
             return False
     for user in user_list:
         user = int(user)
         result = db.session.query(User).get(user)
-        if result is None:
+        if not result:
             return False
     return True
 

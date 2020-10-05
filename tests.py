@@ -1,25 +1,25 @@
 import requests
-import time
+
+                            #### BASIC FUNCTIONAL ####
 
 
-                            ####### BASIC FUNCTIONAL #######
+                                    # ADD USERS
 
 
-                                    # ADD NEW USER
-
-# Add 1001 users
+# Add 2000 users
 
 URL = "http://localhost:9000/users/add"
 
-for number in range(1, 1002):
+for number in range(1, 2001):
     username = "user_" + str(number)
     PARAMS = {"username": username}
     result = requests.post(url=URL, json=PARAMS)
 
+    assert result.status_code == 201
     print(result.text)
 
 
-                                    # ADD NEW CHAT
+                                    # ADD USERS
 
 # Add 500 chats with 3 users per chat
 
@@ -34,10 +34,19 @@ for number in range(1, 501):
     result = requests.post(url=URL, json=PARAMS)
     magic_number = magic_number + 1
 
+    assert result.status_code == 201
     print(result.text)
 
+# Add 1000 users in one chat
 
-                                    # SEND MESSAGE
+PARAMS = {"name": "chat_501", "users": [str(number) for number in range(1, 1001)]}
+result = requests.post(url=URL, json=PARAMS)
+
+assert result.status_code == 201
+print(result.text)
+
+
+                                    # SEND MESSAGES
 
 # Send one message in 500 chats
 
@@ -47,14 +56,16 @@ for number in range(1, 501):
     PARAMS = {"chat": str(number), "author": "1", "text": "hi"}
     result = requests.post(url=URL, json=PARAMS)
 
+    assert result.status_code == 201
     print(result.text)
 
 # Send 500 messages in one chat
 
 for number in range(1, 501):
-    PARAMS = {"chat": "1", "author": "1", "text": "hi"}
+    PARAMS = {"chat": "501", "author": "1", "text": "hi"}
     result = requests.post(url=URL, json=PARAMS)
 
+    assert result.status_code == 201
     print(result.text)
 
 
@@ -65,14 +76,19 @@ URL = "http://localhost:9000/chats/get"
 PARAMS = {"user": "1"}
 result = requests.post(url=URL, json=PARAMS)
 
+assert result.status_code == 200
 print(result.text)
+
 
                                     # GET MESSAGES FROM CHAT
 
+
 URL = "http://127.0.0.1:9000/messages/get"
 
-PARAMS = {"chat": "1"}
+PARAMS = {"chat": "501"}
 
 result = requests.post(url=URL, json=PARAMS)
 
+assert result.status_code == 200
 print(result.text)
+

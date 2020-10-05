@@ -1,2 +1,5 @@
-py_files/.idea
 ./.idea
+./__pycache__
+py_files/.idea
+py_files/__pycache__
+

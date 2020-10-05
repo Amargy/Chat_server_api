@@ -4,8 +4,7 @@ import flask
 from flask import jsonify
 from jsonschema import validate, ValidationError
 from sqlalchemy import select, desc
-from data_base_settings import db, Message, Chat, app, find_user_by_username
-from start_api import association_table, engine
+from data_base_settings import db, Message, Chat, app, find_user_by_username, association_table, engine
 from validation_schemas import validate_schema_for_new_message
 
 
@@ -87,14 +86,14 @@ def form_chat_list_from_database(incoming_json):
 def get_user_chats_list():
     incoming_json = flask.request.get_json()
     if incoming_json is None:
-        return jsonify("Incoming data is empty")
+        return jsonify("Incoming data is empty"), 204
     try:
         validate(instance=incoming_json, schema=validate_schema_for_new_message)
     except ValidationError:
-        return jsonify("Incoming data is not valid")
+        return jsonify("Incoming data is not valid"), 204
 
     if find_user_by_username(incoming_json['user']) is False:
-        return jsonify("User with this name does not exist")
+        return jsonify("User with this name does not exist"), 204
 
     chat_list = form_chat_list_from_database(incoming_json)
-    return jsonify(chat_list)
+    return jsonify(chat_list), 200

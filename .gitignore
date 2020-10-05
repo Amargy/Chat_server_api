@@ -1,5 +1,5 @@
-./.idea
-./__pycache__
+.idea
+__pycache__
 api_py_files/.idea
 api_py_files/__pycache__
 

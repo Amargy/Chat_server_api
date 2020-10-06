@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
 validate_schema_for_new_user_request = {
+    "additionalProperties": False,
     "type": "object",
     "properties": {
         "username": {"type": "string", "minLength": 1, "maxLength": 200}
-    }
+    },
 }
 
 validate_schema_for_new_chat_request = {
+    "additionalProperties": False,
     "type": "object",
     "properties": {
         "name": {"type": "string", "minLength": 1, "maxLength": 200},
@@ -16,6 +18,7 @@ validate_schema_for_new_chat_request = {
 }
 
 validate_schema_for_new_message = {
+    "additionalProperties": False,
     "type": "object",
     "properties": {
         "chat": {"type": "string", "minLength": 1, "maxLength": 200},
@@ -25,6 +28,7 @@ validate_schema_for_new_message = {
 }
 
 validate_schema_for_get_chat_list = {
+    "additionalProperties": False,
     "type": "object",
     "properties": {
         "user": {"type": "string", "minLength": 1, "maxLength": 200}
@@ -32,6 +36,7 @@ validate_schema_for_get_chat_list = {
 }
 
 validate_schema_for_get_message_list = {
+    "additionalProperties": False,
     "type": "object",
     "properties": {
         "chat": {"type": "string", "minLength": 1, "maxLength": 200}

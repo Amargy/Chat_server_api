@@ -6,7 +6,7 @@ from jsonschema import validate, ValidationError
 from sqlalchemy import select, desc
 from data_base_settings import db, Message, Chat, app, association_table, engine, \
     find_users_by_id
-from validation_schemas import validate_schema_for_new_message
+from validation_schemas import validate_schema_for_get_chat_list
 
 
 def add_full_chat_info_to_dict(chat_object_from_db):
@@ -84,7 +84,7 @@ def get_user_chats_list():
     if not incoming_json:
         return jsonify({'error': 'Incoming data is empty'}), 422
     try:
-        validate(instance=incoming_json, schema=validate_schema_for_new_message)
+        validate(instance=incoming_json, schema=validate_schema_for_get_chat_list)
     except ValidationError:
         return jsonify({'error': 'Incoming data is not valid'}), 400
 
